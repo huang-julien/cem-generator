@@ -595,12 +595,32 @@ function createDefaultProgram(projectDir: string): ProgramResult {
   }
 
   const options: ts.CompilerOptions = { allowJs: true, checkJs: false };
-  const program = ts.createProgram({ rootNames: [projectDir], options });
+  const program = ts.createProgram({ rootNames: discoverSourceFiles(projectDir), options });
   const checker = program.getTypeChecker();
   const sourceFiles = program
     .getSourceFiles()
     .filter((sf) => !sf.isDeclarationFile && !sf.fileName.includes("node_modules"));
   return { program, checker, sourceFiles };
+}
+
+function discoverSourceFiles(projectDir: string): string[] {
+  const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mts", ".cts", ".mjs", ".cjs"]);
+  const files: string[] = [];
+
+  function visit(directory: string): void {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      if (["node_modules", ".git", "dist", ".astro"].includes(entry.name)) continue;
+      const filePath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        visit(filePath);
+      } else if (entry.isFile() && extensions.has(path.extname(entry.name).toLowerCase())) {
+        files.push(filePath);
+      }
+    }
+  }
+
+  visit(projectDir);
+  return files;
 }
 
 function filterSourceFiles(
