@@ -1,5 +1,11 @@
 # @wc-toolkit/cem-generator
 
+## 0.1.11
+
+### Patch Changes
+
+- 07d3105: Discover supported source files automatically when a project does not have a `tsconfig.json`.
+
 ## 0.1.10
 
 ### Patch Changes
