@@ -24,6 +24,15 @@ test("omitted include/exclude analyzes all fixture files", () => {
   assert.ok(names.includes("ParsedTypesElement"));
 });
 
+test("missing tsconfig discovers source files before filtering", () => {
+  const manifest = generateCem({
+    tsConfigPath: path.resolve(__dirname, "fixtures/missing-tsconfig.json"),
+    include: ["**/standard-tags-element.js"],
+  });
+
+  assert.deepEqual(declarationNames(manifest), ["StandardTagsElement"]);
+});
+
 test("include narrows analysis to matching files", () => {
   const manifest = generateCem({
     tsConfigPath: fixturesTsConfig,
