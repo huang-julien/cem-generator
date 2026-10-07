@@ -44,6 +44,7 @@ test("supports standard component API JSDoc tags", () => {
   assert.ok(decl.cssProperties?.some((p) => p.name === "--text-color"));
   assert.ok(decl.cssProperties?.some((p) => p.name === "--background-color"));
   assert.ok(decl.cssParts?.some((p) => p.name === "bar"));
+  assert.ok(decl.cssStates?.some((s) => s.name === "active"));
   assert.ok(decl.cssStates?.some((s) => s.name === "open"));
 
   assert.deepEqual(

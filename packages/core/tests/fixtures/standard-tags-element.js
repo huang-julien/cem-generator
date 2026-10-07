@@ -10,6 +10,7 @@
  * @cssprop --text-color - Controls text color
  * @cssproperty [--background-color=red] - Controls background color
  * @csspart bar - Styles the color of bar
+ * @cssstate active - reflects internal active state
  * @cssState open - reflects internal open state
  * @fires custom-event - emitted when work is done
  * @event {{ item: StandardTagsElement }} typed-event - typed event example
