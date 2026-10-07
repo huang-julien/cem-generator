@@ -10,6 +10,16 @@
  * @cssprop {<color>} --text-color - Controls text color
  * @cssproperty {<length>} [--background-color=red] - Controls background color
  * @cssprop --font - Controls font shorthand
+ * @cssprop {<length> | <percentage>} --size-range - Controls size range
+ * @cssprop {<length>+} --spacing-list - Controls spacing list
+ * @cssprop {<color>#} --paint-list - Controls paint list
+ * @cssprop {*} --any-token - Controls arbitrary token
+ * @cssprop {small | medium | large} --scale-token - Controls scale token
+ * @cssprop {string} --typed-string - Should drop TypeScript string
+ * @cssprop {Color} --typed-color - Should drop TypeScript type
+ * @cssprop {'a' | 'b'} --typed-union - Should drop TypeScript union
+ * @cssprop {number[]} --typed-array - Should drop TypeScript array
+ * @cssprop {Array<string>} --typed-generic - Should drop TypeScript generic
  * @csspart bar - Styles the color of bar
  * @cssState open - reflects internal open state
  * @fires custom-event - emitted when work is done

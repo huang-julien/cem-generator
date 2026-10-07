@@ -241,6 +241,25 @@ function readLeadingType(text: string): { type?: string; rest: string } {
   return { rest: text };
 }
 
+/** Heuristic: keep only obvious CSS syntax, not TypeScript-like JSDoc types. */
+function isCssPropertySyntax(syntax: string | undefined): syntax is string {
+  if (!syntax) return false;
+  if (syntax === "*") return true;
+
+  const components = syntax.split("|").map((component) => component.trim());
+  if (components.some((component) => !component)) return false;
+
+  const cssDataType = /^<[a-z]+(?:-[a-z]+)*>[+#]?$/;
+  const cssCustomIdent = /^[a-zA-Z_-][a-zA-Z0-9_-]*$/;
+  const hasCssDataType = components.some((component) => cssDataType.test(component));
+  const hasAlternative = components.length > 1;
+
+  if (!hasCssDataType && !hasAlternative) return false;
+  return components.every(
+    (component) => cssDataType.test(component) || cssCustomIdent.test(component),
+  );
+}
+
 function parseNamedTag(rawText: string): { name?: string; description?: string } | undefined {
   const text = stripLeadingType(rawText);
   if (!text) return undefined;
@@ -322,7 +341,8 @@ function parseSlotTag(rawText: string): { name: string; description?: string } |
 function parseCssPropertyTag(
   rawText: string,
 ): { name: string; description?: string; default?: string; syntax?: string } | undefined {
-  const { type: syntax, rest } = readLeadingType(rawText);
+  const { type, rest } = readLeadingType(rawText);
+  const syntax = isCssPropertySyntax(type) ? type : undefined;
   const text = rest.trim();
   if (!text) return undefined;
 

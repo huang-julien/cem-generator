@@ -41,21 +41,47 @@ test("supports standard component API JSDoc tags", () => {
   );
   assert.ok(decl.slots?.some((s) => s.name === ""));
   assert.ok(decl.slots?.some((s) => s.name === "container"));
-  const textColor = decl.cssProperties?.find((p) => p.name === "--text-color");
+  const cssProperties = decl.cssProperties ?? [];
+  const textColor = cssProperties.find((p) => p.name === "--text-color");
   assert.ok(textColor, "Expected --text-color");
   assert.equal(textColor.syntax, "<color>");
   assert.equal(textColor.description, "Controls text color");
 
-  const backgroundColor = decl.cssProperties?.find((p) => p.name === "--background-color");
+  const backgroundColor = cssProperties.find((p) => p.name === "--background-color");
   assert.ok(backgroundColor, "Expected --background-color");
   assert.equal(backgroundColor.syntax, "<length>");
   assert.equal(backgroundColor.default, "red");
   assert.equal(backgroundColor.description, "Controls background color");
 
-  const font = decl.cssProperties?.find((p) => p.name === "--font");
+  const font = cssProperties.find((p) => p.name === "--font");
   assert.ok(font, "Expected --font");
   assert.equal(font.syntax, undefined);
   assert.equal(font.description, "Controls font shorthand");
+
+  for (const [name, syntax] of [
+    ["--size-range", "<length> | <percentage>"],
+    ["--spacing-list", "<length>+"],
+    ["--paint-list", "<color>#"],
+    ["--any-token", "*"],
+    ["--scale-token", "small | medium | large"],
+  ]) {
+    const property = cssProperties.find((p) => p.name === name);
+    assert.ok(property, `Expected ${name}`);
+    assert.equal(property.syntax, syntax);
+  }
+
+  for (const name of [
+    "--typed-string",
+    "--typed-color",
+    "--typed-union",
+    "--typed-array",
+    "--typed-generic",
+  ]) {
+    const property = cssProperties.find((p) => p.name === name);
+    assert.ok(property, `Expected ${name}`);
+    assert.equal(property.syntax, undefined);
+  }
+
   assert.ok(decl.cssParts?.some((p) => p.name === "bar"));
   assert.ok(decl.cssStates?.some((s) => s.name === "open"));
 
