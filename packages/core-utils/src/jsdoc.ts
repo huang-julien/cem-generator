@@ -87,6 +87,7 @@ const RESERVED_JSDOC_TAGS = new Set([
   "cssproperty",
   "cssprop",
   "cssState",
+  "cssstate",
   "default",
   "deprecated",
   "description",
@@ -153,7 +154,7 @@ export function parseCemClassTags(node: ts.Node): ParsedJSDocClassInfo {
     .filter((t): t is { name: string; description?: string } => !!t?.name);
 
   const cssStates = tags
-    .filter((t) => t.tagName === "cssState")
+    .filter((t) => t.tagName === "cssState" || t.tagName === "cssstate")
     .map((t) => parseNamedTag(t.text))
     .filter((t): t is { name: string; description?: string } => !!t?.name);
 
