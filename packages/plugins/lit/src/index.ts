@@ -614,7 +614,7 @@ function getStaticPropertyMetadata(node: ts.ClassLikeDeclaration): ClassFragment
     ? properties.initializer
     : properties?.body?.statements.find(ts.isReturnStatement)?.expression;
   if (!initializer || !ts.isObjectLiteralExpression(initializer)) return undefined;
-  const constructorDefaults = getConstructorPropertyDefaults(node);
+  const constructorProperties = getConstructorPropertyMetadata(node);
 
   const members: NonNullable<ClassFragment["members"]> = [];
   for (const property of initializer.properties) {
@@ -623,20 +623,34 @@ function getStaticPropertyMetadata(node: ts.ClassLikeDeclaration): ClassFragment
     if (!ts.isObjectLiteralExpression(property.initializer)) continue;
 
     const options = getObjectOptions(property.initializer);
-    members.push({
+    const constructorProperty = constructorProperties.get(name);
+    const member: NonNullable<ClassFragment["members"]>[number] = {
       name,
       kind: "field",
       type: options.type,
       attribute: options.noAttribute ? undefined : (options.attribute ?? name),
       reflects: options.reflect,
-      default: options.default ?? constructorDefaults.get(name),
-    });
+      default: options.default ?? constructorProperty?.default,
+    };
+    if (constructorProperty?.description) member.description = constructorProperty.description;
+    if (constructorProperty?.summary) member.summary = constructorProperty.summary;
+    if (constructorProperty?.deprecated) member.deprecated = constructorProperty.deprecated;
+    members.push(member);
   }
   return members;
 }
 
-function getConstructorPropertyDefaults(node: ts.ClassLikeDeclaration): Map<string, string> {
-  const defaults = new Map<string, string>();
+interface ConstructorPropertyMetadata {
+  default: string;
+  description?: string;
+  summary?: string;
+  deprecated?: boolean | string;
+}
+
+function getConstructorPropertyMetadata(
+  node: ts.ClassLikeDeclaration,
+): Map<string, ConstructorPropertyMetadata> {
+  const properties = new Map<string, ConstructorPropertyMetadata>();
   const constructor = node.members.find(ts.isConstructorDeclaration);
   for (const statement of constructor?.body?.statements ?? []) {
     if (!ts.isExpressionStatement(statement) || !ts.isBinaryExpression(statement.expression))
@@ -648,9 +662,16 @@ function getConstructorPropertyDefaults(node: ts.ClassLikeDeclaration): Map<stri
       assignment.left.expression.kind !== ts.SyntaxKind.ThisKeyword
     )
       continue;
-    defaults.set(assignment.left.name.text, assignment.right.getText());
+    const jsdoc = getJSDocInfo(statement);
+    const memberDoc = parseCemMemberTags(statement);
+    properties.set(assignment.left.name.text, {
+      default: assignment.right.getText(),
+      description: jsdoc.description || undefined,
+      summary: memberDoc.summary,
+      deprecated: memberDoc.deprecated,
+    });
   }
-  return defaults;
+  return properties;
 }
 
 function getObjectOptions(

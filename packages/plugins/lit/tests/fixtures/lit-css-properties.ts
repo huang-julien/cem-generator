@@ -89,6 +89,23 @@ export class ImportedLitElement extends externalMixin(LitElement) {}
 export class RegisteredLitElement extends LitElement {}
 customElements.define("registered-lit-element", RegisteredLitElement);
 
+export class ConstructorJsdocLitElement extends LitElement {
+  static properties = {
+    header: { type: String },
+  };
+
+  constructor() {
+    super();
+    /**
+     * Header message
+     * @summary Constructor header summary
+     * @deprecated Use title instead.
+     */
+    this.header = "Your Message";
+  }
+}
+customElements.define("constructor-jsdoc-lit", ConstructorJsdocLitElement);
+
 export class BaseCustomElement extends LitElement {
   baseMethod() {}
 }

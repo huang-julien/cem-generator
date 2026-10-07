@@ -127,6 +127,19 @@ test("captures only declared CSS custom properties and @property metadata", () =
     .find((item) => item.name === "CrossModuleLitElement");
   assert.equal(crossModule?.tagName, "cross-module-lit");
 
+  const constructorJsdoc = manifest.modules
+    .flatMap((module) => module.declarations)
+    .find((item) => item.name === "ConstructorJsdocLitElement");
+  const header = constructorJsdoc?.members?.find((member) => member.name === "header");
+  assert.equal(header?.description, "Header message");
+  assert.equal(header?.summary, "Constructor header summary");
+  assert.equal(header?.deprecated, "Use title instead.");
+  assert.equal(header?.default, '"Your Message"');
+  assert.equal(
+    constructorJsdoc?.attributes?.find((attribute) => attribute.name === "header")?.description,
+    "Header message",
+  );
+
   assert.equal(
     (decl.members ?? []).some((member) => member.name === "render"),
     false,
