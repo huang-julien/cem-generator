@@ -26,7 +26,7 @@ export interface ParsedJSDocClassInfo {
   tagName?: string;
   deprecated?: boolean | string;
   slots?: Array<{ name: string; description?: string }>;
-  cssProperties?: Array<{ name: string; description?: string; default?: string }>;
+  cssProperties?: Array<{ name: string; description?: string; default?: string; syntax?: string }>;
   cssParts?: Array<{ name: string; description?: string }>;
   cssStates?: Array<{ name: string; description?: string }>;
   attributes?: Array<{ name: string; description?: string; type?: string }>;
@@ -146,7 +146,10 @@ export function parseCemClassTags(node: ts.Node): ParsedJSDocClassInfo {
   const cssProperties = tags
     .filter((t) => t.tagName === "cssprop" || t.tagName === "cssproperty")
     .map((t) => parseCssPropertyTag(t.text))
-    .filter((t): t is { name: string; description?: string; default?: string } => !!t?.name);
+    .filter(
+      (t): t is { name: string; description?: string; default?: string; syntax?: string } =>
+        !!t?.name,
+    );
 
   const cssParts = tags
     .filter((t) => t.tagName === "part" || t.tagName === "csspart")
@@ -239,6 +242,25 @@ function readLeadingType(text: string): { type?: string; rest: string } {
   return { rest: text };
 }
 
+/** Heuristic: keep only obvious CSS syntax, not TypeScript-like JSDoc types. */
+function isCssPropertySyntax(syntax: string | undefined): syntax is string {
+  if (!syntax) return false;
+  if (syntax === "*") return true;
+
+  const components = syntax.split("|").map((component) => component.trim());
+  if (components.some((component) => !component)) return false;
+
+  const cssDataType = /^<[a-z]+(?:-[a-z]+)*>[+#]?$/;
+  const cssCustomIdent = /^[a-zA-Z_-][a-zA-Z0-9_-]*$/;
+  const hasCssDataType = components.some((component) => cssDataType.test(component));
+  const hasAlternative = components.length > 1;
+
+  if (!hasCssDataType && !hasAlternative) return false;
+  return components.every(
+    (component) => cssDataType.test(component) || cssCustomIdent.test(component),
+  );
+}
+
 function parseNamedTag(rawText: string): { name?: string; description?: string } | undefined {
   const text = stripLeadingType(rawText);
   if (!text) return undefined;
@@ -319,8 +341,10 @@ function parseSlotTag(rawText: string): { name: string; description?: string } |
 
 function parseCssPropertyTag(
   rawText: string,
-): { name: string; description?: string; default?: string } | undefined {
-  const text = stripLeadingType(rawText);
+): { name: string; description?: string; default?: string; syntax?: string } | undefined {
+  const { type, rest } = readLeadingType(rawText);
+  const syntax = isCssPropertySyntax(type) ? type : undefined;
+  const text = rest.trim();
   if (!text) return undefined;
 
   if (text.startsWith("[")) {
@@ -340,13 +364,14 @@ function parseCssPropertyTag(
         name,
         description: description || undefined,
         default: defaultValue || undefined,
+        syntax,
       };
     }
   }
 
   const named = parseNamedTag(text);
   if (!named?.name) return undefined;
-  return { name: named.name, description: named.description };
+  return { name: named.name, description: named.description, syntax };
 }
 
 function parseEventTag(

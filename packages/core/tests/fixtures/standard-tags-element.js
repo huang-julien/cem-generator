@@ -7,8 +7,19 @@
  * @attribute {string} mode - mode description
  * @slot - default slot description
  * @slot container - named slot description
- * @cssprop --text-color - Controls text color
- * @cssproperty [--background-color=red] - Controls background color
+ * @cssprop {<color>} --text-color - Controls text color
+ * @cssproperty {<length>} [--background-color=red] - Controls background color
+ * @cssprop --font - Controls font shorthand
+ * @cssprop {<length> | <percentage>} --size-range - Controls size range
+ * @cssprop {<length>+} --spacing-list - Controls spacing list
+ * @cssprop {<color>#} --paint-list - Controls paint list
+ * @cssprop {*} --any-token - Controls arbitrary token
+ * @cssprop {small | medium | large} --scale-token - Controls scale token
+ * @cssprop {string} --typed-string - Should drop TypeScript string
+ * @cssprop {Color} --typed-color - Should drop TypeScript type
+ * @cssprop {'a' | 'b'} --typed-union - Should drop TypeScript union
+ * @cssprop {number[]} --typed-array - Should drop TypeScript array
+ * @cssprop {Array<string>} --typed-generic - Should drop TypeScript generic
  * @csspart bar - Styles the color of bar
  * @cssstate active - reflects internal active state
  * @cssState open - reflects internal open state

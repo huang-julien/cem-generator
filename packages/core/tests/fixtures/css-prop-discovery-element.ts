@@ -22,6 +22,7 @@ export const fixtureTemplate = `
  * CSS property discovery element.
  * @tag css-prop-discovery-element
  * @cssprop --my-card-padding - JSDoc override description
+ * @cssprop {<length>} --my-card-fg - JSDoc override description
  * @csspart footer - JSDoc override description
  */
 export class CssPropDiscoveryElement extends HTMLElement {
