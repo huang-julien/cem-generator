@@ -36,6 +36,14 @@ export class ParsedTypesElement extends HTMLElement {
     return payload;
   }
 
+  close() {
+    this.dispatchEvent(new CustomEvent("parsed-types-close"));
+  }
+
+  async load() {
+    return 1;
+  }
+
   async waitForUpdate(): Promise<void> {
     return;
   }
