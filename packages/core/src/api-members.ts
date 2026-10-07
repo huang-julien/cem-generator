@@ -54,7 +54,7 @@ export function detectClassMembers(
         deprecated: memberDoc.deprecated,
         privacy,
         static: isStatic(modifiers),
-        readonly: isReadonly(member),
+        readonly: isReadonly(member, node),
         type: typeText,
         parsedType:
           parsedTypeText &&
@@ -197,10 +197,26 @@ function getPrivacy(
   return undefined;
 }
 
-function isReadonly(member: ts.ClassElement): boolean | undefined {
+function isReadonly(member: ts.ClassElement, owner: ts.ClassLikeDeclaration): boolean | undefined {
+  if (ts.isGetAccessorDeclaration(member)) {
+    return hasMatchingSetter(member, owner) ? undefined : true;
+  }
   if (!ts.isPropertyDeclaration(member)) return undefined;
   const modifiers = ts.canHaveModifiers(member) ? ts.getModifiers(member) : undefined;
   return modifiers?.some((m) => m.kind === ts.SyntaxKind.ReadonlyKeyword) ? true : undefined;
+}
+
+function hasMatchingSetter(
+  getter: ts.GetAccessorDeclaration,
+  owner: ts.ClassLikeDeclaration,
+): boolean {
+  const getterName = getter.name.getText();
+  const getterStatic = isStatic(ts.canHaveModifiers(getter) ? ts.getModifiers(getter) : undefined);
+  return owner.members.some((member) => {
+    if (!ts.isSetAccessorDeclaration(member)) return false;
+    const modifiers = ts.canHaveModifiers(member) ? ts.getModifiers(member) : undefined;
+    return member.name.getText() === getterName && isStatic(modifiers) === getterStatic;
+  });
 }
 
 function normalizeAttributeName(name: string): string {

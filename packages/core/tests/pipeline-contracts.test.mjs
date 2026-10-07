@@ -341,6 +341,68 @@ test("typeParsing none disables parsed type expansion", () => {
   );
 });
 
+test("getter-only class members are readonly fields", () => {
+  const manifest = generateCem({
+    tsConfigPath: fixturesTsConfig,
+    include: ["accessor-members.js"],
+  });
+  const cases = [
+    {
+      className: "AccessorMembers",
+      memberName: "label",
+      readonly: true,
+      inheritedFrom: undefined,
+    },
+    {
+      className: "AccessorMembers",
+      memberName: "value",
+      readonly: undefined,
+      inheritedFrom: undefined,
+    },
+    {
+      className: "AccessorInheritsGetter",
+      memberName: "inheritedGetterOnly",
+      readonly: true,
+      inheritedFrom: "AccessorBase",
+    },
+    {
+      className: "AccessorOverridesGetter",
+      memberName: "overridePair",
+      readonly: true,
+      inheritedFrom: undefined,
+    },
+    {
+      className: "AccessorOverridesSetter",
+      memberName: "setterOverride",
+      readonly: undefined,
+      inheritedFrom: undefined,
+    },
+    {
+      className: "AccessorInheritsPair",
+      memberName: "inheritedPair",
+      readonly: undefined,
+      inheritedFrom: "AccessorBase",
+    },
+  ];
+
+  for (const expected of cases) {
+    const declaration = getClass(manifest, "accessor-members.js", expected.className);
+    const member = declaration.members?.find(({ name }) => name === expected.memberName);
+
+    assert.equal(member?.kind, "field", `${expected.className}.${expected.memberName} kind`);
+    assert.equal(
+      member?.readonly,
+      expected.readonly,
+      `${expected.className}.${expected.memberName} readonly`,
+    );
+    assert.equal(
+      member?.inheritedFrom?.name,
+      expected.inheritedFrom,
+      `${expected.className}.${expected.memberName} inheritedFrom`,
+    );
+  }
+});
+
 test("reuses class member analysis for the same declaration and checker", () => {
   const result = createProgramFromTsConfig(fixturesTsConfig);
   const sourceFile = result.sourceFiles.find((file) =>
