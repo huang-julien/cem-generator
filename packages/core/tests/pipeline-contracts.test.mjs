@@ -341,6 +341,20 @@ test("typeParsing none disables parsed type expansion", () => {
   );
 });
 
+test("getter-only class members are readonly fields", () => {
+  const manifest = generateCem({
+    tsConfigPath: fixturesTsConfig,
+    include: ["accessor-members.js"],
+  });
+  const declaration = getClass(manifest, "accessor-members.js", "AccessorMembers");
+  const membersByName = new Map(declaration.members?.map((member) => [member.name, member]));
+
+  assert.equal(membersByName.get("label")?.kind, "field");
+  assert.equal(membersByName.get("label")?.readonly, true);
+  assert.equal(membersByName.get("value")?.kind, "field");
+  assert.equal(membersByName.get("value")?.readonly, undefined);
+});
+
 test("reuses class member analysis for the same declaration and checker", () => {
   const result = createProgramFromTsConfig(fixturesTsConfig);
   const sourceFile = result.sourceFiles.find((file) =>
