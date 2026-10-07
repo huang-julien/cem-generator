@@ -391,6 +391,14 @@ test("emits parsed types for fields, attributes, events, method params, and retu
   assert.equal(sharedMethod.return?.type?.text, "SharedPayload");
   assert.ok(sharedMethod.return?.parsedType?.text?.includes("id: string"));
 
+  const close = decl.members?.find((m) => m.name === "close");
+  assert.equal(close?.return?.type?.text, "void");
+  assert.equal(close?.return?.parsedType, undefined);
+
+  const load = decl.members?.find((m) => m.name === "load");
+  assert.equal(load?.return?.type?.text, "Promise<number>");
+  assert.equal(load?.return?.parsedType, undefined);
+
   const waitForUpdate = decl.members?.find((m) => m.name === "waitForUpdate");
   assert.equal(waitForUpdate?.return?.type?.text, "Promise<void>");
   assert.equal(waitForUpdate?.return?.parsedType, undefined);

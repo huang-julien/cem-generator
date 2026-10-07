@@ -161,12 +161,13 @@ function getMethodReturn(
   context: FileContext,
   parseTypes: boolean,
 ): { type?: string; parsedType?: string; description?: string } | undefined {
-  const type = getNodeTypeText(method, context.checker);
+  const returnType = getSignatureReturnType(method, context.checker);
+  const type = method.type
+    ? getNodeTypeText(method, context.checker)
+    : getReturnTypeText(returnType, context.checker);
   if (!type) return undefined;
   let parsedType: string | undefined;
   try {
-    const signature = context.checker.getSignatureFromDeclaration(method);
-    const returnType = signature ? context.checker.getReturnTypeOfSignature(signature) : undefined;
     if (returnType) {
       const expanded = parseTypes
         ? getParsedTypeTextFromType(returnType, context.checker)
@@ -181,6 +182,24 @@ function getMethodReturn(
     parsedType = undefined;
   }
   return { type, parsedType };
+}
+
+function getSignatureReturnType(
+  method: ts.MethodDeclaration,
+  checker: ts.TypeChecker,
+): ts.Type | undefined {
+  try {
+    const signature = checker.getSignatureFromDeclaration(method);
+    return signature ? checker.getReturnTypeOfSignature(signature) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function getReturnTypeText(type: ts.Type | undefined, checker: ts.TypeChecker): string | undefined {
+  if (!type) return undefined;
+  const text = checker.typeToString(type).trim();
+  return !text || text === "any" || text === "unknown" ? undefined : text;
 }
 
 function isStatic(modifiers: readonly ts.Modifier[] | undefined): boolean | undefined {
