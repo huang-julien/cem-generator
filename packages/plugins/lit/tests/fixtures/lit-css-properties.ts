@@ -1,5 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement, property as prop, state } from "lit/decorators.js";
+import { ExternalBaseElement } from "./external-base.js";
 import { externalMixin } from "./mixins.js";
 import { SURFACE_CHANGED_EVENT } from "./events.js";
 
@@ -95,6 +96,24 @@ export class BaseCustomElement extends LitElement {
 
 export class DerivedCustomElement extends BaseCustomElement {
   ownMethod() {}
+}
+
+export class DerivedExternalElement extends ExternalBaseElement {
+  ownExternalMethod() {}
+}
+
+export class BaseLabelElement extends LitElement {
+  /** Label inherited from the base class. */
+  @prop({ attribute: "base-label" })
+  baseLabel = "Base";
+}
+
+export class OverrideLabelElement extends BaseLabelElement {
+  /**
+   * @default "Final"
+   */
+  @prop({ attribute: "base-label" })
+  override baseLabel = "Final";
 }
 
 @customElement("getter-properties-element")

@@ -56,14 +56,17 @@ export function litPlugin(): DetectorPlugin {
             getStaticPropertyMetadata(node),
           );
           const baseMembers = getLitBaseClassMembers(node, context, mixins);
-          const members = mergeLitMembers(
-            ...mixinNames.flatMap((name) => {
-              const mixin = mixins.get(name);
-              return mixin ? [mixin.members] : [];
-            }),
-            baseMembers,
-            ownMembers,
-            undefined,
+          const members = removeInheritedFromOwnMembers(
+            mergeLitMembers(
+              ...mixinNames.flatMap((name) => {
+                const mixin = mixins.get(name);
+                return mixin ? [mixin.members] : [];
+              }),
+              baseMembers,
+              ownMembers,
+              undefined,
+            ),
+            node,
           );
 
           fragment[className] = {
@@ -211,7 +214,10 @@ function resolveLitMixin(
     getDecoratedProperties(implementation, mixinContext),
     getStaticPropertyMetadata(implementation),
   );
-  const members = mergeLitMembers(...nestedMembers, ownMembers)?.map((member) => ({
+  const members = removeInheritedFromOwnMembers(
+    mergeLitMembers(...nestedMembers, ownMembers),
+    implementation,
+  )?.map((member) => ({
     ...member,
     inheritedFrom: member.inheritedFrom ?? {
       name,
@@ -371,7 +377,10 @@ function getLitBaseClassMembers(
       getDecoratedProperties(declaration, context),
       getStaticPropertyMetadata(declaration),
     );
-    const members = mergeLitMembers(...nestedMembers, ownMembers);
+    const members = removeInheritedFromOwnMembers(
+      mergeLitMembers(...nestedMembers, ownMembers),
+      declaration,
+    );
     if (members) {
       const baseName = declaration.name?.text ?? expression.getText();
       baseMembers.push(
@@ -542,10 +551,58 @@ function shouldParseDecoratedType(
 function mergeLitMembers(...sources: ClassFragment["members"][]): ClassFragment["members"] {
   const byName = new Map<string, NonNullable<ClassFragment["members"]>[number]>();
   for (const source of sources) {
-    for (const member of source ?? [])
-      byName.set(member.name, { ...byName.get(member.name), ...member });
+    for (const member of source ?? []) {
+      const merged: NonNullable<ClassFragment["members"]>[number] = {
+        ...byName.get(member.name),
+        name: member.name,
+      };
+      for (const [key, value] of Object.entries(member)) {
+        if (value !== undefined) (merged as Record<string, unknown>)[key] = value;
+      }
+      byName.set(member.name, merged);
+    }
   }
   return byName.size ? [...byName.values()] : undefined;
+}
+
+function removeInheritedFromOwnMembers(
+  members: ClassFragment["members"],
+  node: ts.ClassLikeDeclaration,
+): ClassFragment["members"] {
+  const ownNames = getOwnLitMemberNames(node);
+  if (!members?.length || ownNames.size === 0) return members;
+
+  return members.map((member) => {
+    if (!ownNames.has(member.name) || !member.inheritedFrom) return member;
+    const local = { ...member };
+    delete local.inheritedFrom;
+    return local;
+  });
+}
+
+function getOwnLitMemberNames(node: ts.ClassLikeDeclaration): Set<string> {
+  const names = new Set<string>();
+  for (const member of node.members) {
+    if (
+      ts.isPropertyDeclaration(member) ||
+      ts.isMethodDeclaration(member) ||
+      ts.isGetAccessorDeclaration(member) ||
+      ts.isSetAccessorDeclaration(member)
+    ) {
+      const name = propertyNameText(member.name);
+      if (name) names.add(name);
+    }
+  }
+  for (const member of getStaticPropertyMetadata(node) ?? []) names.add(member.name);
+  return names;
+}
+
+function propertyNameText(name: ts.PropertyName | undefined): string | undefined {
+  if (!name) return undefined;
+  if (ts.isIdentifier(name) || ts.isStringLiteralLike(name) || ts.isNumericLiteral(name)) {
+    return name.text;
+  }
+  return name.getText().replace(/^['"]|['"]$/g, "");
 }
 
 type LitPropertyOptions = {

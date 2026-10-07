@@ -199,6 +199,37 @@ test("preserves custom Lit base classes and marks inherited members", () => {
     derived?.members?.find((member) => member.name === "baseMethod")?.inheritedFrom?.name,
     "BaseCustomElement",
   );
+
+  const overrideLabel = manifest.modules
+    .flatMap((module) => module.declarations)
+    .find((declaration) => declaration.name === "OverrideLabelElement");
+  const member = overrideLabel?.members?.find((item) => item.name === "baseLabel");
+  assert.equal(member?.inheritedFrom, undefined);
+  assert.equal(member?.description, "Label inherited from the base class.");
+  assert.equal(member?.type?.text, "string");
+  assert.equal(member?.default, '"Final"');
+
+  const attr = overrideLabel?.attributes?.find((item) => item.name === "base-label");
+  assert.equal(attr?.inheritedFrom, undefined);
+  assert.equal(attr?.description, "Label inherited from the base class.");
+  assert.equal(attr?.type?.text, "string");
+});
+
+test("inherits members from plain base classes outside the analyzed include set", () => {
+  const manifest = generateCem({
+    tsConfigPath: fixturesTsConfig,
+    include: ["**/lit-css-properties.ts"],
+    plugins: [litPlugin()],
+  });
+  const derived = manifest.modules
+    .flatMap((module) => module.declarations)
+    .find((declaration) => declaration.name === "DerivedExternalElement");
+
+  assert.equal(derived?.superclass?.name, "ExternalBaseElement");
+  assert.equal(
+    derived?.members?.find((member) => member.name === "externalBaseMethod")?.inheritedFrom?.name,
+    "ExternalBaseElement",
+  );
 });
 
 test("captures CSS custom properties from imported Lit styles", () => {
