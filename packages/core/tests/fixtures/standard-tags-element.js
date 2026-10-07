@@ -7,8 +7,9 @@
  * @attribute {string} mode - mode description
  * @slot - default slot description
  * @slot container - named slot description
- * @cssprop --text-color - Controls text color
- * @cssproperty [--background-color=red] - Controls background color
+ * @cssprop {<color>} --text-color - Controls text color
+ * @cssproperty {<length>} [--background-color=red] - Controls background color
+ * @cssprop --font - Controls font shorthand
  * @csspart bar - Styles the color of bar
  * @cssState open - reflects internal open state
  * @fires custom-event - emitted when work is done

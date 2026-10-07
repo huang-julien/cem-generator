@@ -26,7 +26,7 @@ export interface ParsedJSDocClassInfo {
   tagName?: string;
   deprecated?: boolean | string;
   slots?: Array<{ name: string; description?: string }>;
-  cssProperties?: Array<{ name: string; description?: string; default?: string }>;
+  cssProperties?: Array<{ name: string; description?: string; default?: string; syntax?: string }>;
   cssParts?: Array<{ name: string; description?: string }>;
   cssStates?: Array<{ name: string; description?: string }>;
   attributes?: Array<{ name: string; description?: string; type?: string }>;
@@ -145,7 +145,10 @@ export function parseCemClassTags(node: ts.Node): ParsedJSDocClassInfo {
   const cssProperties = tags
     .filter((t) => t.tagName === "cssprop" || t.tagName === "cssproperty")
     .map((t) => parseCssPropertyTag(t.text))
-    .filter((t): t is { name: string; description?: string; default?: string } => !!t?.name);
+    .filter(
+      (t): t is { name: string; description?: string; default?: string; syntax?: string } =>
+        !!t?.name,
+    );
 
   const cssParts = tags
     .filter((t) => t.tagName === "part" || t.tagName === "csspart")
@@ -318,8 +321,9 @@ function parseSlotTag(rawText: string): { name: string; description?: string } |
 
 function parseCssPropertyTag(
   rawText: string,
-): { name: string; description?: string; default?: string } | undefined {
-  const text = stripLeadingType(rawText);
+): { name: string; description?: string; default?: string; syntax?: string } | undefined {
+  const { type: syntax, rest } = readLeadingType(rawText);
+  const text = rest.trim();
   if (!text) return undefined;
 
   if (text.startsWith("[")) {
@@ -339,13 +343,14 @@ function parseCssPropertyTag(
         name,
         description: description || undefined,
         default: defaultValue || undefined,
+        syntax,
       };
     }
   }
 
   const named = parseNamedTag(text);
   if (!named?.name) return undefined;
-  return { name: named.name, description: named.description };
+  return { name: named.name, description: named.description, syntax };
 }
 
 function parseEventTag(

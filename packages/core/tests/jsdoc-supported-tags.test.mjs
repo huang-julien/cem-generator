@@ -41,8 +41,21 @@ test("supports standard component API JSDoc tags", () => {
   );
   assert.ok(decl.slots?.some((s) => s.name === ""));
   assert.ok(decl.slots?.some((s) => s.name === "container"));
-  assert.ok(decl.cssProperties?.some((p) => p.name === "--text-color"));
-  assert.ok(decl.cssProperties?.some((p) => p.name === "--background-color"));
+  const textColor = decl.cssProperties?.find((p) => p.name === "--text-color");
+  assert.ok(textColor, "Expected --text-color");
+  assert.equal(textColor.syntax, "<color>");
+  assert.equal(textColor.description, "Controls text color");
+
+  const backgroundColor = decl.cssProperties?.find((p) => p.name === "--background-color");
+  assert.ok(backgroundColor, "Expected --background-color");
+  assert.equal(backgroundColor.syntax, "<length>");
+  assert.equal(backgroundColor.default, "red");
+  assert.equal(backgroundColor.description, "Controls background color");
+
+  const font = decl.cssProperties?.find((p) => p.name === "--font");
+  assert.ok(font, "Expected --font");
+  assert.equal(font.syntax, undefined);
+  assert.equal(font.description, "Controls font shorthand");
   assert.ok(decl.cssParts?.some((p) => p.name === "bar"));
   assert.ok(decl.cssStates?.some((s) => s.name === "open"));
 
@@ -219,9 +232,9 @@ test("auto-discovers CSS custom properties from :host and @property in templates
 
   const fg = cssProps.find((p) => p.name === "--my-card-fg");
   assert.ok(fg, "Expected --my-card-fg");
-  assert.equal(fg.syntax, "<color>");
+  assert.equal(fg.syntax, "<length>");
   assert.equal(fg.default, "white");
-  assert.equal(fg.description, "Foreground token contract.");
+  assert.equal(fg.description, "JSDoc override description");
 });
 
 test("auto-discovers slots from module-level template literals", () => {
