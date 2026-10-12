@@ -32,7 +32,7 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsc",
+    "build": "node ../../node_modules/typescript-native/bin/tsc",
     "test": "node --test tests/*.test.mjs",
     "dev": "tsx src/cli.ts",
     "demo": "node dist/cli.js generate --tsconfig ../../examples/tsconfig.json --output ../../examples/custom-elements-demo.json --conflict-policy last-wins"
@@ -42,10 +42,10 @@
     "@wc-toolkit/cem-generator-utils": "workspace:*",
     "commander": "^12.1.0",
     "custom-elements-manifest": "^2.1.0",
-    "inquirer": "^14.2.2"
+    "inquirer": "^14.2.2",
+    "typescript": "^5.0.0 || ^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.4.1",
-    "@typescript/typescript6": "^6.0.2"
+    "@types/node": "^26.4.1"
   }
 }

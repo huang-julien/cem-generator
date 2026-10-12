@@ -9,7 +9,7 @@ custom elements with `<svelte:options customElement="..." />`.
 ## Installation
 
 ```sh
-pnpm add -D @wc-toolkit/cem-generator-svelte svelte
+pnpm add -D @wc-toolkit/cem-generator-svelte svelte typescript
 ```
 
 ## Supported pattern

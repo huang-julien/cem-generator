@@ -218,6 +218,7 @@ program
         mode === "cli" ? "@wc-toolkit/cem-generator-cli" : "@wc-toolkit/cem-generator";
       const packagesToInstall = [
         generatorPackage,
+        "typescript",
         ...(mode === "code" ? ["tsx"] : []),
         ...selectedPlugins.map((plugin) => plugin.packageName),
         ...selectedIntegrations.map((integration) => integration.packageName),

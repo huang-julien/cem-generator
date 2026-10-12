@@ -10,7 +10,7 @@ reruns the generator when watched source files change.
 ## Installation
 
 ```bash
-npm install -D @wc-toolkit/cem-generator-bundler
+npm install -D @wc-toolkit/cem-generator-bundler typescript
 ```
 
 The package depends on `@wc-toolkit/cem-generator`. You do not need to install a

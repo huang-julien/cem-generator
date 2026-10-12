@@ -31,8 +31,8 @@ author your web components. Choose `nothing` for vanilla custom elements, which
 are supported by the generator without an additional plugin.
 
 After plugin selection, the interactive flow asks whether to install the
-selected plugin packages. It detects `pnpm`, `yarn`, `bun`, or `npm` from the
-project lockfile.
+selected packages and `typescript`. It detects `pnpm`, `yarn`, `bun`, or
+`npm` from the project lockfile.
 
 The integrations prompt offers React wrappers for React 18 and below, JSX types
 for React 19+, SolidJS, and Preact, plus Vue.js and Svelte type integrations.
@@ -46,7 +46,7 @@ For a non-interactive CLI setup, pass the mode and plugin names directly:
 cem init --mode cli --plugin lit svelte
 ```
 
-Add `--install` to install selected packages in a scripted setup:
+Add `--install` to install selected packages and `typescript` in a scripted setup:
 
 ```bash
 cem init --mode cli --plugin lit svelte --install
@@ -55,7 +55,7 @@ cem init --mode cli --plugin lit svelte --install
 The selected plugin packages must be installed in the project. For example:
 
 ```bash
-npm install -D @wc-toolkit/cem-generator-lit @wc-toolkit/cem-generator-svelte
+npm install -D @wc-toolkit/cem-generator-lit @wc-toolkit/cem-generator-svelte typescript
 ```
 
 The generated config imports and enables the selected plugins:

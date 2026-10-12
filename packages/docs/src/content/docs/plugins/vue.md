@@ -9,7 +9,7 @@ description: Generate a Custom Elements Manifest for Vue custom elements.
 ## Installation
 
 ```sh
-pnpm add -D @wc-toolkit/cem-generator-vue vue
+pnpm add -D @wc-toolkit/cem-generator-vue vue typescript
 ```
 
 ## Supported pattern

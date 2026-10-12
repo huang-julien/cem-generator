@@ -32,11 +32,14 @@
     "demo": "tsx demo/run.ts"
   },
   "dependencies": {
-    "@typescript/typescript6": "^6.0.2",
     "@wc-toolkit/cem-generator-utils": "workspace:*",
     "postcss": "^8.5.6"
   },
   "devDependencies": {
-    "@types/node": "^26.4.1"
+    "@types/node": "^26.4.1",
+    "typescript": "^6.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0 || ^6.0.0"
   }
 }

@@ -9,7 +9,7 @@
     "packages/docs"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "node node_modules/typescript-native/bin/tsc -b",
     "lint": "oxlint packages",
     "lint:fix": "oxlint packages --fix",
     "format": "oxfmt packages",
@@ -42,7 +42,6 @@
     "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
-    "@typescript/typescript6": "^6.0.2",
     "@changesets/cli": "^2.29.7",
     "@types/node": "^26.4.1",
     "ajv": "^8.20.0",
@@ -51,7 +50,8 @@
     "oxlint": "^1.83.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.2",
+    "typescript-native": "npm:typescript@^7.0.2"
   },
   "homepage": "https://cem-generator.wc-toolkit.com/"
 }
