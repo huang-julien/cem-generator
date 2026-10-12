@@ -37,8 +37,8 @@
     "@wc-toolkit/cem-generator-utils": "workspace:*"
   },
   "devDependencies": {
-    "vue": "^3.5.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vue": "^3.5.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0 || ^6.0.0"
