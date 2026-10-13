@@ -34,14 +34,11 @@
   },
   "dependencies": {
     "@wc-toolkit/cem-generator": "workspace:*",
-    "@wc-toolkit/cem-generator-utils": "workspace:*"
+    "@wc-toolkit/cem-generator-utils": "workspace:*",
+    "typescript": "^6.0.0"
   },
   "devDependencies": {
     "preact": "^10.27.2",
-    "preact-custom-element": "^4.3.0",
-    "typescript": "^6.0.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0 || ^6.0.0"
+    "preact-custom-element": "^4.3.0"
   }
 }

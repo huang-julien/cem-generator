@@ -11,4 +11,4 @@
 "@wc-toolkit/cem-generator-vue": minor
 ---
 
-`typescript` (`^5.0.0 || ^6.0.0`) is now a peer dependency instead of a bundled `@typescript/typescript6` copy. Install `typescript` alongside these packages; the CLI depends on it directly so `npx` runs keep working without setup. The generator now analyzes code with the same TypeScript instance your project uses, so callers that already hold a program can share it without a second compiler copy.
+Depend on `typescript@^6` directly instead of the `@typescript/typescript6` alias. The alias is `typescript@6` under another name, so it could never be deduped against a project's own TypeScript and added a second 24 MB copy. Projects on TypeScript 6 now share one install.

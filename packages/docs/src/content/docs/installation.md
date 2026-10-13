@@ -8,7 +8,7 @@ Get started generating a CEM in minutes by following these steps.
 ## Install the core package
 
 ```bash
-npm install -D @wc-toolkit/cem-generator typescript
+npm install -D @wc-toolkit/cem-generator
 ```
 
 ## Run the generator

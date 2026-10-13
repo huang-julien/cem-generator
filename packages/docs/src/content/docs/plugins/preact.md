@@ -9,7 +9,7 @@ description: Generate a Custom Elements Manifest for Preact components registere
 ## Installation
 
 ```sh
-pnpm add -D @wc-toolkit/cem-generator-preact preact-custom-element typescript
+pnpm add -D @wc-toolkit/cem-generator-preact preact-custom-element
 ```
 
 ## Detects

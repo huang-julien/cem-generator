@@ -34,13 +34,10 @@
   },
   "dependencies": {
     "@wc-toolkit/cem-generator": "workspace:*",
-    "@wc-toolkit/cem-generator-utils": "workspace:*"
+    "@wc-toolkit/cem-generator-utils": "workspace:*",
+    "typescript": "^6.0.0"
   },
   "devDependencies": {
-    "typescript": "^6.0.2",
     "vue": "^3.5.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0 || ^6.0.0"
   }
 }

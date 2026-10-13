@@ -22,7 +22,7 @@ npx @wc-toolkit/cem-generator-cli init
 ## Manual Install
 
 ```bash
-npm install -D @wc-toolkit/cem-generator typescript
+npm install -D @wc-toolkit/cem-generator
 ```
 
 ## Usage

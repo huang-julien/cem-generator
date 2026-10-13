@@ -9,7 +9,7 @@ description: Generate a Custom Elements Manifest for Solid Element components.
 ## Installation
 
 ```sh
-pnpm add -D @wc-toolkit/cem-generator-solid solid-element solid-js typescript
+pnpm add -D @wc-toolkit/cem-generator-solid solid-element solid-js
 ```
 
 ## Supported pattern

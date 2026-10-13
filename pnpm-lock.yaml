@@ -63,7 +63,7 @@ importers:
         specifier: ^14.2.2
         version: 14.2.2(@types/node@26.4.1)
       typescript:
-        specifier: ^5.0.0 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@types/node':
@@ -78,18 +78,18 @@ importers:
       postcss:
         specifier: ^8.5.6
         version: 8.5.28
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
     devDependencies:
       '@types/node':
         specifier: ^26.4.1
         version: 26.4.1
-      typescript:
-        specifier: ^6.0.2
-        version: 6.0.3
 
   packages/core-utils:
-    devDependencies:
+    dependencies:
       typescript:
-        specifier: ^6.0.2
+        specifier: ^6.0.0
         version: 6.0.3
 
   packages/docs:
@@ -109,13 +109,13 @@ importers:
       '@wc-toolkit/cem-generator-utils':
         specifier: workspace:*
         version: link:../../core-utils
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
     devDependencies:
       '@microsoft/fast-element':
         specifier: ^3.0.2
         version: 3.0.2
-      typescript:
-        specifier: ^6.0.2
-        version: 6.0.3
 
   packages/plugins/lit:
     dependencies:
@@ -125,13 +125,13 @@ importers:
       '@wc-toolkit/cem-generator-utils':
         specifier: workspace:*
         version: link:../../core-utils
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
     devDependencies:
       lit:
         specifier: ^3.3.3
         version: 3.3.3
-      typescript:
-        specifier: ^6.0.2
-        version: 6.0.3
 
   packages/plugins/preact:
     dependencies:
@@ -141,6 +141,9 @@ importers:
       '@wc-toolkit/cem-generator-utils':
         specifier: workspace:*
         version: link:../../core-utils
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
     devDependencies:
       preact:
         specifier: ^10.27.2
@@ -148,9 +151,6 @@ importers:
       preact-custom-element:
         specifier: ^4.3.0
         version: 4.6.0(preact@10.29.8)
-      typescript:
-        specifier: ^6.0.2
-        version: 6.0.3
 
   packages/plugins/solid:
     dependencies:
@@ -160,6 +160,9 @@ importers:
       '@wc-toolkit/cem-generator-utils':
         specifier: workspace:*
         version: link:../../core-utils
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
     devDependencies:
       solid-element:
         specifier: ^1.9.0
@@ -167,9 +170,6 @@ importers:
       solid-js:
         specifier: ^1.9.0
         version: 1.9.15
-      typescript:
-        specifier: ^6.0.2
-        version: 6.0.3
 
   packages/plugins/stencil:
     dependencies:
@@ -179,9 +179,8 @@ importers:
       '@wc-toolkit/cem-generator-utils':
         specifier: workspace:*
         version: link:../../core-utils
-    devDependencies:
       typescript:
-        specifier: ^6.0.2
+        specifier: ^6.0.0
         version: 6.0.3
 
   packages/plugins/svelte:
@@ -205,10 +204,10 @@ importers:
       '@wc-toolkit/cem-generator-utils':
         specifier: workspace:*
         version: link:../../core-utils
-    devDependencies:
       typescript:
-        specifier: ^6.0.2
+        specifier: ^6.0.0
         version: 6.0.3
+    devDependencies:
       vue:
         specifier: ^3.5.0
         version: 3.5.42(typescript@6.0.3)

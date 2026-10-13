@@ -30,10 +30,7 @@
   "scripts": {
     "demo": "tsx demo/run.ts"
   },
-  "devDependencies": {
-    "typescript": "^6.0.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0 || ^6.0.0"
+  "dependencies": {
+    "typescript": "^6.0.0"
   }
 }
